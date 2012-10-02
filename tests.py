@@ -32,6 +32,9 @@ class KV(object):
         except sqlite3.IntegrityError:
             self._execute('UPDATE data SET value=? WHERE key=?', (value, key))
 
+    def __delitem__(self, key):
+        raise KeyError
+
 
 class KVTest(unittest.TestCase):
 
@@ -64,3 +67,8 @@ class KVTest(unittest.TestCase):
         kv['a'] = 'b'
         kv['a'] = 'c'
         self.assertEqual(kv['a'], 'c')
+
+    def test_delete_missing_item_raises_key_error(self):
+        kv = KV()
+        with self.assertRaises(KeyError):
+            del kv['missing']
