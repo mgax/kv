@@ -86,3 +86,11 @@ class KVPersistenceTest(unittest.TestCase):
         kv1['a'] = 'b'
         kv2 = KV(self.tmp / 'kv.sqlite')
         self.assertEqual(kv2['a'], 'b')
+
+    def test_deep_structure_is_retrieved_the_same(self):
+        from copy import deepcopy
+        value = {'a': ['b', {'c': 123}]}
+        kv1 = KV(self.tmp / 'kv.sqlite')
+        kv1['a'] = deepcopy(value)
+        kv2 = KV(self.tmp / 'kv.sqlite')
+        self.assertEqual(kv2['a'], value)
