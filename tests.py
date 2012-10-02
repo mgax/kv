@@ -26,6 +26,10 @@ class KV(object):
         except KeyError:
             return fallback
 
+    def __contains__(self, key):
+        [[n]] =  self._execute('SELECT COUNT(*) FROM data WHERE key=?', (key,))
+        return bool(n)
+
     def __setitem__(self, key, value):
         try:
             self._execute('INSERT INTO data VALUES (?, ?)', (key, value))
@@ -51,6 +55,14 @@ class KVTest(unittest.TestCase):
     def test_get_missing_value_with_default_returns_argument(self):
         fallback = object()
         self.assertEqual(KV().get('missing', fallback), fallback)
+
+    def test_contains_missing_value_is_false(self):
+        self.assertFalse('missing' in KV())
+
+    def test_contains_existing_value_is_true(self):
+        kv = KV()
+        kv['a'] = 'b'
+        self.assertTrue('a' in kv)
 
     def test_saved_item_is_retrieved_via_getitem(self):
         kv = KV()
