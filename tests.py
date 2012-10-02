@@ -1,8 +1,9 @@
 import unittest
 import sqlite3
+from collections import MutableMapping
 
 
-class KV(object):
+class KV(MutableMapping):
 
     def __init__(self, **kwargs):
         self._db = sqlite3.connect(':memory:')
@@ -22,16 +23,6 @@ class KV(object):
         else:
             raise KeyError
 
-    def get(self, key, fallback=None):
-        try:
-            return self[key]
-        except KeyError:
-            return fallback
-
-    def __contains__(self, key):
-        [[n]] =  self._execute('SELECT COUNT(*) FROM data WHERE key=?', (key,))
-        return bool(n)
-
     def __iter__(self):
         return (key for [key] in self._execute('SELECT key FROM data'))
 
@@ -46,10 +37,6 @@ class KV(object):
             self._execute('DELETE FROM data WHERE key=?', (key,))
         else:
             raise KeyError
-
-    def update(self, items):
-        for k in items:
-            self[k] = items[k]
 
 
 class KVTest(unittest.TestCase):
