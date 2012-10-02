@@ -4,9 +4,11 @@ import sqlite3
 
 class KV(object):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self._db = sqlite3.connect(':memory:')
         self._execute('CREATE TABLE data (key TEXT PRIMARY KEY, value TEXT)')
+        for k in kwargs:
+            self[k] = kwargs[k]
 
     def _execute(self, *args):
         return self._db.cursor().execute(*args)
@@ -92,6 +94,10 @@ class KVTest(unittest.TestCase):
         kv['a'] = 'b'
         kv['a'] = 'c'
         self.assertEqual(kv['a'], 'c')
+
+    def test_constructor_kwargs_retrieved_via_getitem(self):
+        kv = KV(a='b')
+        self.assertEqual(kv['a'], 'b')
 
     def test_delete_missing_item_raises_key_error(self):
         kv = KV()
