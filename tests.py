@@ -7,8 +7,7 @@ class KV(object):
     def __init__(self, **kwargs):
         self._db = sqlite3.connect(':memory:')
         self._execute('CREATE TABLE data (key TEXT PRIMARY KEY, value TEXT)')
-        for k in kwargs:
-            self[k] = kwargs[k]
+        self.update(kwargs)
 
     def _execute(self, *args):
         return self._db.cursor().execute(*args)
@@ -47,6 +46,10 @@ class KV(object):
             self._execute('DELETE FROM data WHERE key=?', (key,))
         else:
             raise KeyError
+
+    def update(self, items):
+        for k in items:
+            self[k] = items[k]
 
 
 class KVTest(unittest.TestCase):
@@ -97,6 +100,11 @@ class KVTest(unittest.TestCase):
 
     def test_constructor_kwargs_retrieved_via_getitem(self):
         kv = KV(a='b')
+        self.assertEqual(kv['a'], 'b')
+
+    def test_udpate_with_dictionary_items_retrieved_via_getitem(self):
+        kv = KV()
+        kv.update({'a': 'b'})
         self.assertEqual(kv['a'], 'b')
 
     def test_delete_missing_item_raises_key_error(self):
