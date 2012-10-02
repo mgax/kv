@@ -30,6 +30,9 @@ class KV(object):
         [[n]] =  self._execute('SELECT COUNT(*) FROM data WHERE key=?', (key,))
         return bool(n)
 
+    def __iter__(self):
+        return (key for [key] in self._execute('SELECT key FROM data'))
+
     def __setitem__(self, key, value):
         try:
             self._execute('INSERT INTO data VALUES (?, ?)', (key, value))
@@ -94,3 +97,10 @@ class KVTest(unittest.TestCase):
         del kv['a']
         with self.assertRaises(KeyError):
             kv['a']
+
+    def test_iter_yields_keys(self):
+        kv = KV()
+        kv['a'] = 'x'
+        kv['b'] = 'x'
+        kv['c'] = 'x'
+        self.assertItemsEqual(kv, ['a', 'b', 'c'])
