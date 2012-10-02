@@ -1,4 +1,6 @@
 import unittest
+import tempfile
+from path import path
 from kv import KV
 
 
@@ -71,3 +73,16 @@ class KVTest(unittest.TestCase):
         kv['b'] = 'x'
         kv['c'] = 'x'
         self.assertItemsEqual(kv, ['a', 'b', 'c'])
+
+
+class KVPersistenceTest(unittest.TestCase):
+
+    def setUp(self):
+        self.tmp = path(tempfile.mkdtemp())
+        self.addCleanup(self.tmp.rmtree)
+
+    def test_value_saved_by_one_kv_client_is_read_by_another(self):
+        kv1 = KV(self.tmp / 'kv.sqlite')
+        kv1['a'] = 'b'
+        kv2 = KV(self.tmp / 'kv.sqlite')
+        self.assertEqual(kv2['a'], 'b')

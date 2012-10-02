@@ -4,9 +4,11 @@ from collections import MutableMapping
 
 class KV(MutableMapping):
 
-    def __init__(self):
-        self._db = sqlite3.connect(':memory:')
-        self._execute('CREATE TABLE data (key TEXT PRIMARY KEY, value TEXT)')
+    def __init__(self, db_uri=':memory:'):
+        self._db = sqlite3.connect(db_uri)
+        self._db.isolation_level = None
+        self._execute('CREATE TABLE IF NOT EXISTS data '
+                      '(key TEXT PRIMARY KEY, value TEXT)')
 
     def _execute(self, *args):
         return self._db.cursor().execute(*args)
