@@ -37,7 +37,10 @@ class KV(object):
             self._execute('UPDATE data SET value=? WHERE key=?', (value, key))
 
     def __delitem__(self, key):
-        raise KeyError
+        if key in self:
+            self._execute('DELETE FROM data WHERE key=?', (key,))
+        else:
+            raise KeyError
 
 
 class KVTest(unittest.TestCase):
@@ -84,3 +87,10 @@ class KVTest(unittest.TestCase):
         kv = KV()
         with self.assertRaises(KeyError):
             del kv['missing']
+
+    def test_get_deleted_item_raises_key_error(self):
+        kv = KV()
+        kv['a'] = 'b'
+        del kv['a']
+        with self.assertRaises(KeyError):
+            kv['a']
