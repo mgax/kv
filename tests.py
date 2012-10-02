@@ -27,7 +27,10 @@ class KV(object):
             return fallback
 
     def __setitem__(self, key, value):
-        self._execute('INSERT INTO data VALUES (?, ?)', (key, value))
+        try:
+            self._execute('INSERT INTO data VALUES (?, ?)', (key, value))
+        except sqlite3.IntegrityError:
+            self._execute('UPDATE data SET value=? WHERE key=?', (value, key))
 
 
 class KVTest(unittest.TestCase):
@@ -55,3 +58,9 @@ class KVTest(unittest.TestCase):
         kv = KV()
         kv['a'] = 'b'
         self.assertEqual(kv.get('a'), 'b')
+
+    def test_updated_item_is_retrieved_via_getitem(self):
+        kv = KV()
+        kv['a'] = 'b'
+        kv['a'] = 'c'
+        self.assertEqual(kv['a'], 'c')
