@@ -12,7 +12,8 @@ class KV(object):
         return self._db.cursor().execute(*args)
 
     def __len__(self):
-        return 0
+        [[n]] = self._execute('SELECT COUNT(*) FROM data')
+        return n
 
     def __getitem__(self, key):
         for row in self._execute('SELECT value FROM data WHERE key=?', (key,)):
@@ -50,6 +51,12 @@ class KVTest(unittest.TestCase):
 
     def test_new_kv_is_empty(self):
         self.assertEqual(len(KV()), 0)
+
+    def test_kv_with_two_items_has_size_two(self):
+        kv = KV()
+        kv['a'] = 'x'
+        kv['b'] = 'x'
+        self.assertEqual(len(kv), 2)
 
     def test_get_missing_value_raises_key_error(self):
         with self.assertRaises(KeyError):
