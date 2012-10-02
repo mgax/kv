@@ -48,10 +48,6 @@ class KVTest(unittest.TestCase):
         kv['a'] = 'c'
         self.assertEqual(kv['a'], 'c')
 
-    def test_constructor_kwargs_retrieved_via_getitem(self):
-        kv = KV(a='b')
-        self.assertEqual(kv['a'], 'b')
-
     def test_udpate_with_dictionary_items_retrieved_via_getitem(self):
         kv = KV()
         kv.update({'a': 'b'})

@@ -4,10 +4,9 @@ from collections import MutableMapping
 
 class KV(MutableMapping):
 
-    def __init__(self, **kwargs):
+    def __init__(self):
         self._db = sqlite3.connect(':memory:')
         self._execute('CREATE TABLE data (key TEXT PRIMARY KEY, value TEXT)')
-        self.update(kwargs)
 
     def _execute(self, *args):
         return self._db.cursor().execute(*args)
