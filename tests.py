@@ -21,7 +21,10 @@ class KV(object):
             raise KeyError
 
     def get(self, key, fallback=None):
-        return fallback
+        try:
+            return self[key]
+        except KeyError:
+            return fallback
 
     def __setitem__(self, key, value):
         self._execute('INSERT INTO data VALUES (?, ?)', (key, value))
@@ -43,7 +46,12 @@ class KVTest(unittest.TestCase):
         fallback = object()
         self.assertEqual(KV().get('missing', fallback), fallback)
 
-    def test_set_item_is_saved(self):
+    def test_saved_item_is_retrieved_via_getitem(self):
         kv = KV()
         kv['a'] = 'b'
         self.assertEqual(kv['a'], 'b')
+
+    def test_saved_item_is_retrieved_via_get(self):
+        kv = KV()
+        kv['a'] = 'b'
+        self.assertEqual(kv.get('a'), 'b')
