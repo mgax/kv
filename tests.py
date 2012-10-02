@@ -9,8 +9,8 @@ class KV(object):
     def __getitem__(self, key):
         raise KeyError
 
-    def get(self, key):
-        return None
+    def get(self, key, fallback=None):
+        return fallback
 
 
 class KVTest(unittest.TestCase):
@@ -24,3 +24,7 @@ class KVTest(unittest.TestCase):
 
     def test_get_missing_value_returns_default(self):
         self.assertIsNone(KV().get('missing'))
+
+    def test_get_missing_value_with_default_returns_argument(self):
+        fallback = object()
+        self.assertEqual(KV().get('missing', fallback), fallback)
