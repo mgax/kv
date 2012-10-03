@@ -84,6 +84,11 @@ class KVTest(unittest.TestCase):
         kv[13] = 'a'
         self.assertIsNone(kv.get('13'))
 
+    def test_value_saved_at_null_key_is_retrieved(self):
+        kv = KV()
+        kv[None] = 'a'
+        self.assertEqual(kv[None], 'a')
+
 
 class KVPersistenceTest(unittest.TestCase):
 

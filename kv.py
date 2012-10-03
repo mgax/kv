@@ -22,7 +22,11 @@ class KV(MutableMapping):
         return n
 
     def __getitem__(self, key):
-        for row in self._execute('SELECT value FROM data WHERE key=?', (key,)):
+        if key is None:
+            q = ('SELECT value FROM data WHERE key is NULL', ())
+        else:
+            q = ('SELECT value FROM data WHERE key=?', (key,))
+        for row in self._execute(*q):
             return json.loads(row[0])
         else:
             raise KeyError
