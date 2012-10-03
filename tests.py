@@ -74,6 +74,16 @@ class KVTest(unittest.TestCase):
         kv['c'] = 'x'
         self.assertItemsEqual(kv, ['a', 'b', 'c'])
 
+    def test_value_saved_with_int_key_is_retrieved_with_int_key(self):
+        kv = KV()
+        kv[13] = 'a'
+        self.assertEqual(kv[13], 'a')
+
+    def test_value_saved_with_int_key_is_not_retrieved_with_str_key(self):
+        kv = KV()
+        kv[13] = 'a'
+        self.assertIsNone(kv.get('13'))
+
 
 class KVPersistenceTest(unittest.TestCase):
 

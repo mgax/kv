@@ -12,7 +12,7 @@ class KV(MutableMapping):
         self._db = sqlite3.connect(db_uri)
         self._db.isolation_level = None
         self._execute('CREATE TABLE IF NOT EXISTS data '
-                      '(key TEXT PRIMARY KEY, value TEXT)')
+                      '(key PRIMARY KEY, value)')
 
     def _execute(self, *args):
         return self._db.cursor().execute(*args)
