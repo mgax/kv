@@ -125,3 +125,27 @@ class KVPersistenceTest(unittest.TestCase):
         kv1['a'] = deepcopy(value)
         kv2 = KV(self.tmp / 'kv.sqlite')
         self.assertEqual(kv2['a'], value)
+
+    def test_lock_fails_if_db_already_locked(self):
+        import sqlite3
+        from threading import Thread
+        from Queue import Queue
+        db_path = self.tmp / 'kv.sqlite'
+        q1 = Queue()
+        q2 = Queue()
+        kv2 = KV(db_path, timeout=0.1)
+        def locker():
+            kv1 = KV(db_path)
+            with kv1.lock():
+                q1.put(None)
+                q2.get()
+        th = Thread(target=locker)
+        th.start()
+        try:
+            q1.get()
+            with self.assertRaises(sqlite3.OperationalError) as cm:
+                with kv2.lock(): pass
+            self.assertEqual(cm.exception.message, 'database is locked')
+        finally:
+            q2.put(None)
+            th.join()
