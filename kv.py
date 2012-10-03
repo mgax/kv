@@ -14,6 +14,7 @@ class KV(MutableMapping):
         self._db.isolation_level = None
         self._execute('CREATE TABLE IF NOT EXISTS data '
                       '(key PRIMARY KEY, value)')
+        self._locks = 0
 
     def _execute(self, *args):
         return self._db.cursor().execute(*args)
@@ -37,10 +38,13 @@ class KV(MutableMapping):
 
     def __setitem__(self, key, value):
         jvalue = json.dumps(value)
-        try:
-            self._execute('INSERT INTO data VALUES (?, ?)', (key, jvalue))
-        except sqlite3.IntegrityError:
-            self._execute('UPDATE data SET value=? WHERE key=?', (jvalue, key))
+        with self.lock():
+            try:
+                self._execute('INSERT INTO data VALUES (?, ?)',
+                              (key, jvalue))
+            except sqlite3.IntegrityError:
+                self._execute('UPDATE data SET value=? WHERE key=?',
+                              (jvalue, key))
 
     def __delitem__(self, key):
         if key in self:
@@ -50,8 +54,12 @@ class KV(MutableMapping):
 
     @contextmanager
     def lock(self):
-        self._execute('BEGIN IMMEDIATE TRANSACTION')
+        if not self._locks:
+            self._execute('BEGIN IMMEDIATE TRANSACTION')
+        self._locks += 1
         try:
             yield
         finally:
-            self._execute('COMMIT')
+            self._locks -= 1
+            if not self._locks:
+                self._execute('COMMIT')

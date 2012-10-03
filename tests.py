@@ -152,3 +152,10 @@ class KVPersistenceTest(unittest.TestCase):
         finally:
             q2.put(None)
             th.join()
+
+    def test_lock_during_lock_still_saves_value(self):
+        kv = KV()
+        with kv.lock():
+            with kv.lock():
+                kv['a'] = 'b'
+        self.assertEqual(kv['a'], 'b')
