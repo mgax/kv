@@ -84,6 +84,11 @@ class KVTest(unittest.TestCase):
         kv[13] = 'a'
         self.assertIsNone(kv.get('13'))
 
+    def test_value_saved_with_str_key_is_not_retrieved_with_int_key(self):
+        kv = KV()
+        kv['13'] = 'a'
+        self.assertIsNone(kv.get(13))
+
     def test_value_saved_at_null_key_is_retrieved(self):
         kv = KV()
         kv[None] = 'a'
