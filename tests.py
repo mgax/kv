@@ -94,6 +94,12 @@ class KVTest(unittest.TestCase):
         kv[3.14] = 'a'
         self.assertEqual(kv[3.14], 'a')
 
+    def test_value_saved_with_unicode_key_is_retrieved(self):
+        kv = KV()
+        key = u'\u2022'
+        kv[key] = 'a'
+        self.assertEqual(kv[key], 'a')
+
 
 class KVPersistenceTest(unittest.TestCase):
 
