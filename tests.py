@@ -89,6 +89,11 @@ class KVTest(unittest.TestCase):
         kv[None] = 'a'
         self.assertEqual(kv[None], 'a')
 
+    def test_value_saved_with_float_key_is_retrieved_with_float_key(self):
+        kv = KV()
+        kv[3.14] = 'a'
+        self.assertEqual(kv[3.14], 'a')
+
 
 class KVPersistenceTest(unittest.TestCase):
 
