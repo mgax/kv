@@ -143,9 +143,12 @@ class KVPersistenceTest(unittest.TestCase):
         th.start()
         try:
             q1.get()
-            with self.assertRaises(sqlite3.OperationalError) as cm:
+            with self.assertRaises(sqlite3.OperationalError) as cm1:
                 with kv2.lock(): pass
-            self.assertEqual(cm.exception.message, 'database is locked')
+            self.assertEqual(cm1.exception.message, 'database is locked')
+            with self.assertRaises(sqlite3.OperationalError) as cm2:
+                kv2['a'] = 'b'
+            self.assertEqual(cm2.exception.message, 'database is locked')
         finally:
             q2.put(None)
             th.join()
