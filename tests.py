@@ -159,3 +159,11 @@ class KVPersistenceTest(unittest.TestCase):
             with kv.lock():
                 kv['a'] = 'b'
         self.assertEqual(kv['a'], 'b')
+
+    def test_same_database_can_contain_two_namespaces(self):
+        kv1 = KV(self.tmp / 'kv.sqlite')
+        kv2 = KV(self.tmp / 'kv.sqlite', table='other')
+        kv1['a'] = 'b'
+        kv2['a'] = 'c'
+        self.assertEqual(kv1['a'], 'b')
+        self.assertEqual(kv2['a'], 'c')
