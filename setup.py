@@ -13,7 +13,7 @@ distutils.core.setup(
     description=summary,
     long_description=readme_rst,
     license="BSD License",
-    version='0.1',
+    version='0.2',
     author='Alex Morega',
     py_modules=['kv'],
     classifiers=[
