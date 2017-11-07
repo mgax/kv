@@ -1,2 +1,5 @@
 nose==1.2.1
+mock==2.0.0
 path.py==2.4.1
+flake8==3.5.0
+coverage==3.7.1
