@@ -1,10 +1,13 @@
+from __future__ import print_function
+import argparse
 import sqlite3
+import sys
 from collections import MutableMapping
 from contextlib import contextmanager
 try:
     import simplejson as json
 except ImportError:
-    import json
+    import json  # noqa
 
 
 class KV(MutableMapping):
@@ -45,8 +48,8 @@ class KV(MutableMapping):
                 self._execute('INSERT INTO %s VALUES (?, ?)' % self._table,
                               (key, jvalue))
             except sqlite3.IntegrityError:
-                self._execute('UPDATE %s SET value=? WHERE key=?' % self._table,
-                              (jvalue, key))
+                self._execute('UPDATE %s SET value=? WHERE key=?' %
+                              self._table, (jvalue, key))
 
     def __delitem__(self, key):
         if key in self:
@@ -65,3 +68,35 @@ class KV(MutableMapping):
             self._locks -= 1
             if not self._locks:
                 self._execute('COMMIT')
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Key-value store backed by SQLite.")
+    parser.add_argument('db_uri', help='Database filename or URI')
+    parser.add_argument('-t', '--table', nargs=1, default='data',
+                        help='Table name')
+    subparsers = parser.add_subparsers(dest='command')
+
+    parser_get = subparsers.add_parser('get', help='Get the value for a key')
+    parser_get.add_argument('key')
+
+    parser_set = subparsers.add_parser('set', help='Set a value for a key')
+    parser_set.add_argument('key')
+    parser_set.add_argument('value')
+
+    parser_del = subparsers.add_parser('del', help='Delete a key')
+    parser_del.add_argument('key')
+
+    opts = parser.parse_args()
+    kv = KV(opts.db_uri, opts.table)
+    if opts.command == 'get':
+        if opts.key not in kv:
+            sys.exit(1)
+        print(kv[opts.key])
+    elif opts.command == 'set':
+        kv[opts.key] = opts.value
+    elif opts.command == 'del':
+        if opts.key not in kv:
+            sys.exit(1)
+        del kv[opts.key]
