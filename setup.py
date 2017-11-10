@@ -3,7 +3,7 @@ import distutils.core
 
 
 summary = "KV provides a dictionary-like interface on top of SQLite."
-with open(os.path.join(os.path.dirname(__file__), 'README.rst'), 'rb') as f:
+with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as f:
     readme_rst = f.read()
 
 
@@ -24,6 +24,13 @@ distutils.core.setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Database :: Front-Ends',
     ],
+    entry_points={
+        'console_scripts': [
+            'kv-cli = kv:main',
+        ],
+    },
 )
