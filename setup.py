@@ -1,5 +1,5 @@
 import os
-import distutils.core
+from setuptools import setup
 
 
 summary = "KV provides a dictionary-like interface on top of SQLite."
@@ -7,7 +7,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as f:
     readme_rst = f.read()
 
 
-distutils.core.setup(
+setup(
     name='kv',
     url='https://github.com/mgax/kv',
     description=summary,
