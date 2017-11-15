@@ -1,0 +1,7 @@
+pip-tools
+nose
+mock
+path.py
+flake8
+coverage
+tox
