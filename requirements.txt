@@ -4,20 +4,40 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-click==6.7                # via pip-tools
+click==6.7
+    # via pip-tools
 coverage==3.7.1
-first==2.0.1              # via pip-tools
+    # via -r requirements.in
+first==2.0.1
+    # via pip-tools
 flake8==3.5.0
-mccabe==0.6.1             # via flake8
+    # via -r requirements.in
+mccabe==0.6.1
+    # via flake8
 mock==2.0.0
+    # via -r requirements.in
 nose==1.2.1
+    # via -r requirements.in
 path.py==2.4.1
-pbr==3.1.1                # via mock
+    # via -r requirements.in
+pbr==3.1.1
+    # via mock
 pip-tools==1.10.1
-pluggy==0.5.2             # via tox
-py==1.5.0                 # via tox
-pycodestyle==2.3.1        # via flake8
-pyflakes==1.6.0           # via flake8
-six==1.11.0               # via mock, pip-tools, tox
+    # via -r requirements.in
+pluggy==0.5.2
+    # via tox
+py==1.10.0
+    # via tox
+pycodestyle==2.3.1
+    # via flake8
+pyflakes==1.6.0
+    # via flake8
+six==1.11.0
+    # via
+    #   mock
+    #   pip-tools
+    #   tox
 tox==2.9.1
-virtualenv==15.1.0        # via tox
+    # via -r requirements.in
+virtualenv==15.1.0
+    # via tox
