@@ -2,7 +2,12 @@ from __future__ import print_function
 import argparse
 import sqlite3
 import sys
-from collections import MutableMapping
+try:
+    from collections import MutableMapping
+except ImportError:
+    # python3.10 ended this import, try from the new home
+    from collections.abc import MutableMapping
+
 from contextlib import contextmanager
 try:
     import simplejson as json
