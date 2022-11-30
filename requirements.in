@@ -1,5 +1,5 @@
 coverage
-flake8<6  # py3.7 compatibility
+flake8
 mock
 pip-tools
 pytest
