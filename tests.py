@@ -2,10 +2,11 @@ import sqlite3
 import tempfile
 import unittest
 from copy import deepcopy
+from shutil import rmtree
 from threading import Thread
 
 import mock
-from path import path
+from pathlib import Path
 
 import kv
 
@@ -115,8 +116,8 @@ class KVTest(unittest.TestCase):
 class KVPersistenceTest(unittest.TestCase):
 
     def setUp(self):
-        self.tmp = path(tempfile.mkdtemp())
-        self.addCleanup(self.tmp.rmtree)
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(rmtree, self.tmp)
 
     def test_value_saved_by_one_kv_client_is_read_by_another(self):
         kv1 = kv.KV(self.tmp / 'kv.sqlite')
@@ -176,10 +177,10 @@ class KVPersistenceTest(unittest.TestCase):
 class CLITest(unittest.TestCase):
 
     def setUp(self):
-        self.tmp = path(tempfile.mkdtemp())
+        self.tmp = Path(tempfile.mkdtemp())
         self.kv_file = str(self.tmp / 'kv.sqlite')
         self.kv = kv.KV(self.kv_file)
-        self.addCleanup(self.tmp.rmtree)
+        self.addCleanup(rmtree, self.tmp)
 
     def _run(self, *args):
         with mock.patch('sys.argv', ['kv', self.kv_file] + list(args)):
