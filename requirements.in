@@ -1,7 +1,6 @@
-pip-tools
-nose
-mock
-path.py
-flake8
 coverage
+flake8
+mock
+pip-tools
+pytest
 tox
