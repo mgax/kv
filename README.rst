@@ -1,6 +1,8 @@
 KV - simple key/value store
 ===========================
 
+.. image:: https://github.com/mgax/kv/actions/workflows/ci.yml/badge.svg?branch=master
+
 KV provides a dictionary-like interface on top of SQLite. Keys can be
 unicode strings, numbers or None. Values are stored as JSON.
 
