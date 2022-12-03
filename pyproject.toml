@@ -1,13 +1,28 @@
 [tool.poetry]
 name = "kv"
-version = "0.4"
+version = "0.4.1"
 description = "KV provides a dictionary-like interface on top of SQLite."
 authors = ["Alex Morega <alex@grep.ro>"]
 readme = "README.rst"
+license = "BSD-2-Clause"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Database :: Front-Ends",
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
 
+[tool.poetry.scripts]
+kv-cli = "kv:main"
 
 [build-system]
 requires = ["poetry-core"]
